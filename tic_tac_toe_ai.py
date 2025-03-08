@@ -1,3 +1,16 @@
+"""
+Tic-Tac-Toe AI using Pygame and Minimax Algorithm
+
+This program allows a human player to play Tic-Tac-Toe against an AI opponent.
+The AI can play at three difficulty levels:
+- Easy: Random moves
+- Medium: Minimax with limited depth
+- Hard: Full Minimax (perfect play)
+
+Author: Your Name
+Date: March 2025
+"""
+
 import pygame
 import random
 
@@ -24,23 +37,23 @@ CROSS_COLOR = (66, 66, 66)
 board = [[' ' for _ in range(3)] for _ in range(3)]
 player = 'X'
 ai = 'O'
-difficulty = "Medium"  # Set AI difficulty
+difficulty = "Hard"  # Set AI difficulty level (Easy, Medium, Hard)
 
 # Pygame setup
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption('Tic Tac Toe AI')
+pygame.display.set_caption('Tic-Tac-Toe AI')
 screen.fill(BG_COLOR)
 
 
-# Draw grid lines
 def draw_grid():
+    """Draws the Tic-Tac-Toe grid on the screen."""
     for i in range(1, BOARD_ROWS):
         pygame.draw.line(screen, LINE_COLOR, (0, i * SQUARE_SIZE), (WIDTH, i * SQUARE_SIZE), LINE_WIDTH)
         pygame.draw.line(screen, LINE_COLOR, (i * SQUARE_SIZE, 0), (i * SQUARE_SIZE, HEIGHT), LINE_WIDTH)
 
 
-# Draw X and O
 def draw_figures():
+    """Draws X and O on the board based on the current game state."""
     for row in range(BOARD_ROWS):
         for col in range(BOARD_COLS):
             if board[row][col] == 'O':
@@ -50,14 +63,16 @@ def draw_figures():
             elif board[row][col] == 'X':
                 pygame.draw.line(screen, CROSS_COLOR,
                                  (col * SQUARE_SIZE + SPACE, row * SQUARE_SIZE + SPACE),
-                                 (col * SQUARE_SIZE + SQUARE_SIZE - SPACE, row * SQUARE_SIZE + SQUARE_SIZE - SPACE), CROSS_WIDTH)
+                                 (col * SQUARE_SIZE + SQUARE_SIZE - SPACE, row * SQUARE_SIZE + SQUARE_SIZE - SPACE),
+                                 CROSS_WIDTH)
                 pygame.draw.line(screen, CROSS_COLOR,
                                  (col * SQUARE_SIZE + SQUARE_SIZE - SPACE, row * SQUARE_SIZE + SPACE),
-                                 (col * SQUARE_SIZE + SPACE, row * SQUARE_SIZE + SQUARE_SIZE - SPACE), CROSS_WIDTH)
+                                 (col * SQUARE_SIZE + SPACE, row * SQUARE_SIZE + SQUARE_SIZE - SPACE),
+                                 CROSS_WIDTH)
 
 
-# Check for winner
 def is_winner(player):
+    """Checks if a given player ('X' or 'O') has won the game."""
     for row in board:
         if all(cell == player for cell in row):
             return True
@@ -69,19 +84,19 @@ def is_winner(player):
     return False
 
 
-# Check for draw
 def is_draw():
+    """Checks if the game is a draw (no empty spaces left)."""
     return all(board[row][col] != ' ' for row in range(3) for col in range(3))
 
 
-# Minimax algorithm
 def minimax(board, depth, is_maximizing):
+    """Minimax algorithm to determine the best move for the AI."""
     if is_winner(ai):
-        return 1
+        return 1  # AI wins
     if is_winner(player):
-        return -1
+        return -1  # Player wins
     if is_draw():
-        return 0
+        return 0  # Draw
 
     if difficulty == "Medium" and depth >= 2:  # Limit depth for medium difficulty
         return 0
@@ -93,7 +108,7 @@ def minimax(board, depth, is_maximizing):
                 if board[i][j] == ' ':
                     board[i][j] = ai
                     score = minimax(board, depth + 1, False)
-                    board[i][j] = ' '
+                    board[i][j] = ' '  # Undo move
                     best_score = max(score, best_score)
         return best_score
     else:
@@ -103,13 +118,13 @@ def minimax(board, depth, is_maximizing):
                 if board[i][j] == ' ':
                     board[i][j] = player
                     score = minimax(board, depth + 1, True)
-                    board[i][j] = ' '
+                    board[i][j] = ' '  # Undo move
                     best_score = min(score, best_score)
         return best_score
 
 
-# AI chooses best move
 def best_move():
+    """AI determines the best move based on the chosen difficulty."""
     if difficulty == "Easy":
         empty_cells = [(i, j) for i in range(3) for j in range(3) if board[i][j] == ' ']
         return random.choice(empty_cells) if empty_cells else None
@@ -121,26 +136,27 @@ def best_move():
             if board[i][j] == ' ':
                 board[i][j] = ai
                 score = minimax(board, 0, False)
-                board[i][j] = ' '
+                board[i][j] = ' '  # Undo move
                 if score > best_score:
                     best_score = score
                     move = (i, j)
     return move
 
 
-# Reset the board
 def reset_board():
+    """Resets the game board and redraws the grid."""
     global board
     board = [[' ' for _ in range(3)] for _ in range(3)]
     screen.fill(BG_COLOR)
     draw_grid()
 
 
-# Game loop
+# Draw initial grid
 draw_grid()
 running = True
 game_over = False
 
+# Main game loop
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -166,10 +182,12 @@ while running:
                             print("AI wins!")
                             game_over = True
 
+        # Reset game when clicking after game over
         if game_over and event.type == pygame.MOUSEBUTTONDOWN:
             reset_board()
             game_over = False
 
+    # Update game visuals
     screen.fill(BG_COLOR)
     draw_grid()
     draw_figures()
