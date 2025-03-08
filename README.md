@@ -21,7 +21,15 @@ You can **click on the board** to make a move. The game will announce a **winner
 
 ## Installation & Setup
 
-### 1️Clone the Repository
-```bash
-git clone https://github.com/yourusername/tic-tac-toe-ai.git
-cd tic-tac-toe-ai
+# Clone the repository
+git clone https://github.com/ruairibradley/tic_tac_toe_minmax.git
+
+# Navigate into the project directory
+cd tic_tac_toe_minmax
+
+# Install dependencies (ensure pygame is installed)
+pip install pygame
+
+# Run the game
+python tic_tac_toe_ai.py
+
