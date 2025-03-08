@@ -7,7 +7,7 @@ The AI can play at three difficulty levels:
 - Medium: Minimax with limited depth
 - Hard: Full Minimax (perfect play)
 
-Author: Your Name
+Author: Ruairi Bradley
 Date: March 2025
 """
 
